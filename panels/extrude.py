@@ -22,7 +22,7 @@ class Panel(ScreenPanel):
         self.distances = ['5', '10', '15', '25']
         if self.ks_printer_cfg is not None:
             dis = self.ks_printer_cfg.get("extrude_distances", '')
-            if re.match(r'^[0-9,\s]+$', dis):
+            if re.match(r'^[0-9,\.\s]+$', dis):
                 dis = [str(i.strip()) for i in dis.split(',')]
                 if 1 < len(dis) < 5:
                     self.distances = dis
@@ -32,8 +32,8 @@ class Panel(ScreenPanel):
                 if 1 < len(vel) < 5:
                     self.speeds = vel
 
-        self.distance = int(self.distances[1])
-        self.speed = int(self.speeds[1])
+        self.distance = self.distances[1]
+        self.speed = self.speeds[1]
         self.buttons = {
             'extrude': self._gtk.Button("extrude", _("Extrude"), "color4"),
             'load': self._gtk.Button("arrow-down", _("Load"), "color3"),
@@ -92,20 +92,20 @@ class Panel(ScreenPanel):
         distgrid = Gtk.Grid()
         for j, i in enumerate(self.distances):
             self.labels[f"dist{i}"] = self._gtk.Button(label=i)
-            self.labels[f"dist{i}"].connect("clicked", self.change_distance, int(i))
+            self.labels[f"dist{i}"].connect("clicked", self.change_distance, i)
             ctx = self.labels[f"dist{i}"].get_style_context()
             ctx.add_class("horizontal_togglebuttons")
-            if int(i) == self.distance:
+            if i == self.distance:
                 ctx.add_class("horizontal_togglebuttons_active")
             distgrid.attach(self.labels[f"dist{i}"], j, 0, 1, 1)
 
         speedgrid = Gtk.Grid()
         for j, i in enumerate(self.speeds):
             self.labels[f"speed{i}"] = self._gtk.Button(label=i)
-            self.labels[f"speed{i}"].connect("clicked", self.change_speed, int(i))
+            self.labels[f"speed{i}"].connect("clicked", self.change_speed, i)
             ctx = self.labels[f"speed{i}"].get_style_context()
             ctx.add_class("horizontal_togglebuttons")
-            if int(i) == self.speed:
+            if i == self.speed:
                 ctx.add_class("horizontal_togglebuttons_active")
             speedgrid.attach(self.labels[f"speed{i}"], j, 0, 1, 1)
 
